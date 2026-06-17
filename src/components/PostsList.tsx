@@ -1,4 +1,5 @@
 import React from 'react';
+import { Post } from '../types/Post';
 
 type Props = {
   posts: Post[];

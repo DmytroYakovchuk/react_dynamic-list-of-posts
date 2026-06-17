@@ -1,5 +1,6 @@
 import { Loader } from './Loader';
 import { PostsList } from './PostsList';
+import { Post } from '../types/Post';
 
 type Props = {
   selectedUserId: number;
@@ -7,7 +8,7 @@ type Props = {
   loading: boolean;
   error: boolean;
   selectedPostId: number;
-  onSelectPost: (post: Post) => void;
+  onSelectPost: (post: Post | null) => void;
 };
 
 export const MainContent: React.FC<Props> = ({

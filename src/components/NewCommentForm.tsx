@@ -13,6 +13,7 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAddComment }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [body, setBody] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -49,6 +50,8 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAddComment }) => {
       onAddComment(newComment);
 
       setBody('');
+    } catch {
+      setSubmitError('Unable to add a comment');
     } finally {
       setLoading(false);
     }
@@ -176,6 +179,10 @@ export const NewCommentForm: React.FC<Props> = ({ postId, onAddComment }) => {
           </p>
         )}
       </div>
+
+      {submitError && (
+        <div className="notification is-danger">{submitError}</div>
+      )}
 
       <div className="field is-grouped">
         <div className="control">
