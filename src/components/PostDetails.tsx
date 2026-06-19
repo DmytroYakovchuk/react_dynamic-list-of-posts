@@ -14,28 +14,30 @@ type Props = {
 export const PostDetails: React.FC<Props> = ({ post }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
   const handleDelete = (commentId: number) => {
-    const currentComments = comments;
+    const currentComments = [...comments];
 
     setComments(prev => prev.filter(comment => comment.id !== commentId));
 
     deleteComment(commentId).catch(() => {
       setComments(currentComments);
-      setError(true);
+      setDeleteError(true);
     });
   };
 
   useEffect(() => {
     setLoading(true);
-    setError(false);
+    setLoadError(false);
+    setDeleteError(false);
     setIsFormVisible(false);
 
     getCommentsByPost(post.id)
       .then(setComments)
-      .catch(() => setError(true))
+      .catch(() => setLoadError(true))
       .finally(() => setLoading(false));
   }, [post.id]);
 
@@ -52,19 +54,25 @@ export const PostDetails: React.FC<Props> = ({ post }) => {
       <div className="block">
         {loading && <Loader />}
 
-        {error && (
+        {loadError && (
           <div className="notification is-danger" data-cy="CommentsError">
             Something went wrong
           </div>
         )}
 
-        {!loading && !error && comments.length === 0 && (
+        {!loading && !loadError && comments.length === 0 && (
           <p className="title is-4" data-cy="NoCommentsMessage">
             No comments yet
           </p>
         )}
 
-        {!loading && !error && comments.length > 0 && (
+        {deleteError && (
+          <div className="notification is-danger">
+            Unable to delete comment. Try again.
+          </div>
+        )}
+
+        {!loading && !loadError && comments.length > 0 && (
           <>
             <p className="title is-4">Comments:</p>
 
@@ -96,7 +104,7 @@ export const PostDetails: React.FC<Props> = ({ post }) => {
           </>
         )}
 
-        {!loading && !error && !isFormVisible && (
+        {!loading && !loadError && !isFormVisible && (
           <button
             data-cy="WriteCommentButton"
             type="button"
